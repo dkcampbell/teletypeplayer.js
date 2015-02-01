@@ -19,8 +19,8 @@ var term = new Terminal({
     rows: 24, 
     useStyle: true, 
     screenKeys: false, 
-    cursorBlink: 
-false});    
+    cursorBlink: false
+});    
 term.open(document.body);                                     
 
 $.getJSON('out.json', function(json) {                        
