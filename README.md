@@ -14,7 +14,13 @@ This example uses both [term.js](https://github.com/chjj/term.js) and
 [jQuery](https://jquery.com/).
 
 ``` javascript
-var term = new Terminal({cols: 80, rows: 24, useStyle: true, screenKeys: false, cursorBlink: false});    
+var term = new Terminal({
+    cols: 80, 
+    rows: 24, 
+    useStyle: true, 
+    screenKeys: false, 
+    cursorBlink: 
+false});    
 term.open(document.body);                                     
 
 $.getJSON('out.json', function(json) {                        
