@@ -23,6 +23,9 @@
 /* This is a very simple library for taking json dumps of ttyrec files and
  * playing them in the browser. It requires a term.js "compatible" terminal
  * passed as the term object and a tty2json compatible json dump file.
+ *
+ * NOTE: I'm not an experiecned javascript developer. This could very easily
+ * be awful code.
  */
 
 
