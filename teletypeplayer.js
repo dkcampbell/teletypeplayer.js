@@ -20,7 +20,8 @@
  * THE SOFTWARE.
  */
 
-/* This is a very simple library for taking json dumps of ttyrec files and
+/* 
+ * This is a very simple library for taking json dumps of ttyrec files and
  * playing them in the browser. It requires a term.js "compatible" terminal
  * passed as the term object and a tty2json compatible json dump file.
  *
@@ -30,28 +31,48 @@
 
 
 function TeletypePlayer(term, json, pause) {
-  "use strict";
-  this.term = term;
-  this.json = json;
-  this.pause = pause;
+    "use strict";
+    this.term = term;
+    this.json = json;
+    this.pPause = pause;
 }
 
-TeletypePlayer.prototype.play = function() {
-  "use strict";
-  var start_sec  = this.json[0][0];
-  var start_usec = this.json[0][1];
+TeletypePlayer.prototype.start = function() {
+    "use strict";
+    var start_sec  = this.json[0][0];
+    var start_usec = this.json[0][1];
+    var start = new Date(this.json[0][0]);
+    start.setMilliseconds(this.json[0][1]/1000);
 
-  for (var i = 0; i < this.json.length; i++) { 
+    var term = this.term;
+    var json = this.json;
+    var i = 0;
+    var len = json.length;
+    var prev = (new Date()).valueOf();
 
-    var seconds  = this.json[i][0] - start_sec;
-    var useconds = this.json[i][1] - start_usec;
-    var data     = this.json[i][2];
+    function render() {
+        requestAnimationFrame(render);
+        if ((time - prev) > 16.6667) { return; }
+        for (var j = i; j < len; j++) {
+            var seconds  = json[j][0] - start_sec;
+            var useconds = json[j][1] - start_usec;
+            var mseconds = seconds*1000 + useconds/1000;
+            var data     = json[j][2];
+            var diff     = time - prev;
 
-    (function(data, seconds, useconds) {
-      setTimeout(function() { 
-        this.term.write(data) 
-      }, 
-      seconds*1000 + useconds/1000);
-    })(data, seconds, useconds);
-  }
+            var time = (new Date()).valueOf();
+            if (diff > mseconds) { 
+                prev = time;
+                i++;
+                if (i == len) { i = 0; }
+                term.write(data);
+            } 
+        }
+    };
+    render();
+
+}
+
+TeletypePlayer.prototype.pause = function(bool) {
+    this.pPause = bool;
 }
